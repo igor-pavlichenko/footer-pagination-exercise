@@ -1,0 +1,22 @@
+{
+	"name": "mezu_footer_pagination",
+	"version": "1.0.0",
+	"description": "pre-interview exercise",
+	"main": "index.js",
+	"scripts": {
+		"start": "ts-node index.ts",
+		"test": "mocha -r ts-node/register **/*.spec.ts"
+	},
+	"author": "Igor Pavlichenko",
+	"license": "ISC",
+	"devDependencies": {
+		"@types/chai": "^4.1.4",
+		"@types/mocha": "^5.2.4",
+		"chai": "^4.1.2",
+		"mocha": "^5.2.0",
+		"ts-node": "^7.0.0",
+		"tslint": "^5.10.0",
+		"tslint-config-airbnb": "^5.9.2",
+		"typescript": "^2.9.2"
+	}
+}
