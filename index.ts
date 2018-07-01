@@ -46,49 +46,99 @@ export const pagination = (
 
   // calculate boundaries and around intervals using simple math
   const leftSideBoundary = {
-    start: 1,
+    start: boundariesApplied ? 1 : 0,
     // if boundaries are bigger than current page - limit the interval to current page
-    end: (boundariesApplied < currentPage) ? boundariesApplied : currentPage - 1,
+    end: boundariesApplied ? (
+      (boundariesApplied < currentPage)
+        ? boundariesApplied
+        : currentPage - 1)
+      : 0,
   };
   const leftSideAround = {
     // if boundaries are bigger than current page - care to avoid starting at negative numbers
-    start: (aroundApplied < currentPage) ? currentPage - aroundApplied : 1,
-    end: currentPage - 1,
+    start: aroundApplied ? (
+      (aroundApplied < currentPage)
+        ? currentPage - aroundApplied
+        : 1)
+      : 0,
+    end: aroundApplied ? currentPage - 1 : 0,
   };
 
   const rightSideBoundary = {
     // we start from page 1 and not 0.. must skip 1
-    start: (boundariesApplied < currentPage)
-      ? totalPages - boundariesApplied + 1
-      : currentPage + 1,
-    end: totalPages,
+    start: boundariesApplied ? (
+      (boundariesApplied < currentPage)
+        ? totalPages - boundariesApplied + (boundariesApplied ? 1 : 0)
+        : currentPage + 1)
+      : 0,
+    end: boundariesApplied ? totalPages : 0,
   };
-  const rightSideAround = {
-    start: 1 + currentPage,
-    end: (aroundApplied < currentPage) ? currentPage + aroundApplied : totalPages,
-  };
+  // const rightSideAround = {
+  //   start: (aroundApplied && currentPage !== totalPages) ? 1 + currentPage : 0,
+  //   end: (aroundApplied && currentPage !== totalPages) ? ( // this is giving me problems
+  //     (aroundApplied > currentPage)
+  //       ? currentPage + aroundApplied
+  //       : totalPages)
+  //   //   currentPage + aroundApplied
+  //   // )
+  //     : 0,
+  // };
+  const rightSideAround = { start: 0, end: 0 };
+  if (aroundApplied) {
+    // if current page isn't the last page
+    if (currentPage !== totalPages) {
+      // then around starts at the page after currentPage
+      rightSideAround.start = 1 + currentPage;
+      // and ends specified pages after it
+      rightSideAround.end = currentPage + aroundApplied;
+      // but if after adding the amount, the END exceeds totalPages then just
+      // make it = totalPages
+      if (rightSideAround.end > totalPages) rightSideAround.end = totalPages;
+    }
+  }
+
+
+  console.log(`leftSideBoundary: ${leftSideBoundary.start} - ${leftSideBoundary.end}`);
+  console.log(`leftSideAround: ${leftSideAround.start} - ${leftSideAround.end}`);
+  console.log(`rightSideAround: ${rightSideAround.start} - ${rightSideAround.end}`);
+  console.log(`rightSideBoundary: ${rightSideBoundary.start} - ${rightSideBoundary.end}`);
 
   // get boundary pages for both sides
   // boundaries are sliced from external limits (far from current page)
   const boundariesLeftSide = [];
-  for (let i = leftSideBoundary.start; i <= leftSideBoundary.end; i++) {
-    boundariesLeftSide.push(i);
-  }
-  const boundariesRightSide = [];
-  for (let i = rightSideBoundary.start; i <= rightSideBoundary.end; i++) {
-    boundariesRightSide.push(i);
+  if (leftSideBoundary.start && leftSideBoundary.end) {
+    for (let i = leftSideBoundary.start; i <= leftSideBoundary.end; i++) {
+      boundariesLeftSide.push(i);
+    }
   }
 
+  const boundariesRightSide = [];
+  if (rightSideBoundary.start && rightSideBoundary.end) {
+    for (let i = rightSideBoundary.start; i <= rightSideBoundary.end; i++) {
+      boundariesRightSide.push(i);
+    }
+  }
 
   // get pages around the current page
   const aroundLeftSide = [];
-  for (let i = leftSideAround.start; i <= leftSideAround.end; i++) {
-    aroundLeftSide.push(i);
+  if (leftSideAround.start && leftSideAround.end) {
+    for (let i = leftSideAround.start; i <= leftSideAround.end; i++) {
+      aroundLeftSide.push(i);
+    }
   }
+
   const aroundRightSide = [];
-  for (let i = rightSideAround.start; i <= rightSideAround.end; i++) {
-    aroundRightSide.push(i);
+  if (rightSideAround.start && rightSideAround.end) {
+    for (let i = rightSideAround.start; i <= rightSideAround.end; i++) {
+      // console.log('pushing i: ', i);
+      aroundRightSide.push(i);
+    }
   }
+
+  // console.log('boundariesLeftSide: ', boundariesLeftSide);
+  // console.log('boundariesRightSide: ', boundariesRightSide);
+  // console.log('aroundLeftSide: ', aroundLeftSide);
+  // console.log('aroundRightSide: ', aroundRightSide);
 
 
   // filter duplicates and sort them
@@ -98,6 +148,9 @@ export const pagination = (
   const rightSideNoDuplicates = [...new Set<number>(
     [...boundariesRightSide, ...aroundRightSide].sort((a, b) => a - b),
   )];
+  // console.log('\n');
+  // console.log('leftSideNoDuplicates: ', leftSideNoDuplicates);
+  // console.log('rightSideNoDuplicates: ', rightSideNoDuplicates);
 
 
   // add '...' when boundaries are hidden
@@ -123,8 +176,17 @@ export const pagination = (
   }
 
   let rightSideString = '';
+  // if there are pages to be printed AFTER currentPage
   if (rightSideNoDuplicates.length > 0) {
-    // rightSideString += around ? '' : '...';
+    // if there is stuff to concat after currentPage and it's not 'pages around'
+    if (!aroundRightSide.length) {
+      // then we must check whether the first page of the array comes
+      // immediately after current page OR there are pages in between that
+      // should be omitted with ...
+      if (currentPage + 1 !== rightSideNoDuplicates[0]) {
+        rightSideString += ' ...';
+      }
+    }
     // build the string that follows [currentPage]
     rightSideNoDuplicates.map((page, i) => {
       const prevPage = rightSideNoDuplicates[i - 1];
@@ -137,7 +199,7 @@ export const pagination = (
     if (!boundariesRightSide.length) rightSideString += ' ...';
   }
 
-  // concat the selected page
+
   const finalResult = `${leftSideString} [${currentPage}]${rightSideString}`;
 
 
@@ -150,11 +212,17 @@ export const pagination = (
 // 3) - you can now run the pagination() function
 // console.log('final result: ', pagination(500, 1000, 5, 5));
 // console.log('final result: ', pagination(13, 20, 30, 30));
-// console.log('final result: ', pagination(10, 20, 0, 2));
+// console.log('final result: ', pagination(10, 20, 0, 2)); // 0 boundaries
+// console.log('final result: ', pagination(10, 20, 2, 0)); // 0 around
+// console.log('final result: ', pagination(20, 20, 0, 3));
+// console.log('final result: ', pagination(1, 20, 0, 3));
 
-// console.log('final result: ', pagination(21, 20, 2, 3));
+// console.log('final result: ', pagination(4, Number.MAX_SAFE_INTEGER, 2, 2));
+console.log('final result: ', pagination(1, Number.MAX_SAFE_INTEGER, 2, 2));
 
-console.log('final result: ', pagination(4, 5, 1, 0));
+// console.log('final result: ', pagination(4, 10, 2, 0));
+
+// console.log('final result: ', pagination(4, 5, 1, 0));
 
 // console.log('final result: ', pagination(10, 20, 30, 3));
 // console.log('final result: ', pagination(10, 20, 3, 30));
