@@ -34,6 +34,21 @@ describe('footer pagination', () => {
     expect(result).to.equal('1 2 3 [4] 5 6 7 8 9 10');
   });
 
+  it('current page at the edge (START) all pages visible', () => {
+    const result = pagination(1, 5, 2, 2);
+    expect(result).to.equal('[1] 2 3 4 5');
+  });
+
+  it('current page at the edge (END) all pages visible', () => {
+    const result = pagination(5, 5, 2, 2);
+    expect(result).to.equal('1 2 3 4 [5]');
+  });
+
+  it('current page at the edge (start)', () => {
+    const result = pagination(1, 10, 2, 2);
+    expect(result).to.equal('[1] 2 3 ... 9 10');
+  });
+
   it('currentPage out of bounds (greater)', () => {
     const result = pagination(11, 10, 2, 2);
     expect(result).to.equal('currentPage out of bounds');
