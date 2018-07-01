@@ -19,6 +19,13 @@ describe('footer pagination', () => {
     expect(result).to.equal('1 2 3 [4] 5 6 ... 9 10');
   });
 
+  it('"currentPage" in the middle, large amount of pages, small "around" and "boundaries"', () => {
+    const result = pagination(500, 1000, 5, 5);
+    expect(result).to.equal(
+      '1 2 3 4 5 ... 495 496 497 498 499 [500] 501 502 503 504 505 ... 996 997 998 999 1000',
+    );
+  });
+
   it('"boundaries" bigger than "totalPages"', () => {
     const result = pagination(4, 10, 99, 2);
     expect(result).to.equal('1 2 3 [4] 5 6 7 8 9 10');
@@ -44,7 +51,7 @@ describe('footer pagination', () => {
     expect(result).to.equal('1 2 3 4 [5]');
   });
 
-  it('current page at the edge (start)', () => {
+  it('current page at the edge (START), pages in the middle hidden', () => {
     const result = pagination(1, 10, 2, 2);
     expect(result).to.equal('[1] 2 3 ... 9 10');
   });
@@ -68,10 +75,45 @@ describe('footer pagination', () => {
     expect(result).to.equal('1 2 ... [4] ... 9 10');
   });
 
+  it('"boundaries" = 0 and currentPage at the edge (START)', () => {
+    const result = pagination(1, 10, 0, 2);
+    expect(result).to.equal('[1] 2 3 ...');
+  });
+
+  it('"boundaries" = 0 and currentPage at the edge (END)', () => {
+    const result = pagination(10, 10, 0, 2);
+    expect(result).to.equal('... 8 9 [10]');
+  });
+
+  it('"around" = 0 and currentPage at the edge (START)', () => {
+    const result = pagination(1, 10, 2, 0);
+    expect(result).to.equal('[1] ... 9 10');
+  });
+
+  it('"around" = 0 and currentPage at the edge (END)', () => {
+    const result = pagination(10, 10, 2, 0);
+    expect(result).to.equal('1 2 ... [10]');
+  });
+
   it('big number of "totalPages"', () => {
     const result = pagination(4, Number.MAX_SAFE_INTEGER, 2, 2);
     expect(result).to.equal(
       `1 2 3 [4] 5 6 ... ${Number.MAX_SAFE_INTEGER - 1} ${Number.MAX_SAFE_INTEGER}`,
+    );
+  });
+
+  it('big number of "totalPages", "currentPage" at the edge (START)', () => {
+    const result = pagination(1, Number.MAX_SAFE_INTEGER, 2, 2);
+    expect(result).to.equal(
+      `[1] 2 3 ... ${Number.MAX_SAFE_INTEGER - 1} ${Number.MAX_SAFE_INTEGER}`,
+    );
+  });
+
+  it('big number of "totalPages", "currentPage" at the edge (END)', () => {
+    const result = pagination(Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER, 2, 2);
+    expect(result).to.equal(
+      `1 2 ... ${Number.MAX_SAFE_INTEGER - 2} ${Number.MAX_SAFE_INTEGER - 1}` +
+      ` [${Number.MAX_SAFE_INTEGER}]`,
     );
   });
 
