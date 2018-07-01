@@ -99,4 +99,4 @@ export const pagination = (
 
 
 // import { pagination } from './index'
-// console.log('final result: ', pagination(10, 20, 2, 3));
+console.log('final result: ', pagination(10, 20, 2, 3));
