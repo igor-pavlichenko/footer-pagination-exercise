@@ -64,25 +64,23 @@ export const pagination = (
     end: aroundApplied ? currentPage - 1 : 0,
   };
 
-  const rightSideBoundary = {
-    // we start from page 1 and not 0.. must skip 1
-    start: boundariesApplied ? (
-      (boundariesApplied < currentPage)
-        ? totalPages - boundariesApplied + (boundariesApplied ? 1 : 0)
-        : currentPage + 1)
-      : 0,
-    end: boundariesApplied ? totalPages : 0,
-  };
-  // const rightSideAround = {
-  //   start: (aroundApplied && currentPage !== totalPages) ? 1 + currentPage : 0,
-  //   end: (aroundApplied && currentPage !== totalPages) ? ( // this is giving me problems
-  //     (aroundApplied > currentPage)
-  //       ? currentPage + aroundApplied
-  //       : totalPages)
-  //   //   currentPage + aroundApplied
-  //   // )
-  //     : 0,
-  // };
+  const rightSideBoundary = { start: 0, end: 0 };
+  if (boundariesApplied) {
+    // if current page isn't the last
+    if (currentPage !== totalPages) {
+      // then boundary starts n pages before totalPages which is the end
+      rightSideBoundary.start = totalPages - (boundariesApplied - 1);
+      // but if start is less than currentPage then it starts right after currentPage
+      if (rightSideBoundary.start < currentPage) {
+        rightSideBoundary.start = currentPage + 1;
+      }
+      // and ends at the last page which is = totalPages
+      rightSideBoundary.end = totalPages;
+      // but if after adding the amount, the END exceeds totalPages then just
+      // make it = totalPages
+    }
+  }
+
   const rightSideAround = { start: 0, end: 0 };
   if (aroundApplied) {
     // if current page isn't the last page
@@ -218,7 +216,8 @@ export const pagination = (
 // console.log('final result: ', pagination(1, 20, 0, 3));
 
 // console.log('final result: ', pagination(4, Number.MAX_SAFE_INTEGER, 2, 2));
-console.log('final result: ', pagination(1, Number.MAX_SAFE_INTEGER, 2, 2));
+// console.log('final result: ', pagination(1, Number.MAX_SAFE_INTEGER, 2, 2));
+console.log('final result: ', pagination(4, 10, 99, 2));
 
 // console.log('final result: ', pagination(4, 10, 2, 0));
 
