@@ -34,6 +34,25 @@ describe('footer pagination', () => {
     expect(result).to.equal('1 2 3 [4] 5 6 7 8 9 10');
   });
 
+  it('currentPage out of bounds (greater)', () => {
+    const result = pagination(11, 10, 2, 2);
+    expect(result).to.equal('currentPage out of bounds');
+  });
+  it('currentPage out of bounds (less)', () => {
+    const result = pagination(0, 10, 2, 2);
+    expect(result).to.equal('currentPage out of bounds');
+  });
+
+  it('"boundaries" = 0', () => {
+    const result = pagination(4, 10, 0, 2);
+    expect(result).to.equal('... 2 3 [4] 5 6 ...');
+  });
+
+  it('"around" = 0', () => {
+    const result = pagination(4, 10, 2, 0);
+    expect(result).to.equal('1 2 ... [4] ... 9 10');
+  });
+
   it('big number of "totalPages"', () => {
     const result = pagination(4, Number.MAX_SAFE_INTEGER, 2, 2);
     expect(result).to.equal(
@@ -42,7 +61,7 @@ describe('footer pagination', () => {
   });
 
   it('UNSAFE(much bigger) number of "totalPages"', () => {
-    const unsafeInt = 99999999999999999;
+    const unsafeInt = 99999999999999999999999999999999;
     const result = pagination(4, unsafeInt, 2, 2);
     expect(result).to.equal(
       'v8 limitation with Number.MAX_SAFE_INTEGER',

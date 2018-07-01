@@ -26,6 +26,9 @@ export const pagination = (
     || !Number.isSafeInteger(around)) {
     return 'v8 limitation with Number.MAX_SAFE_INTEGER';
   }
+  if (currentPage < 1 || currentPage > totalPages) {
+    return 'currentPage out of bounds';
+  }
   const MAX_ALLOWED_BOUNDARIES = 20;
   const MAX_ALLOWED_AROUND = 20;
   // do not allow big intervals of pages to be displayed
@@ -98,36 +101,41 @@ export const pagination = (
 
 
   // add '...' when boundaries are hidden
-  let leftSideString = boundariesLeftSide.length ? '' : '...';
-  // build the string that precedes the [currentPage]
-  leftSideNoDuplicates.map((page, i) => {
-    // the logic is
-    // while iterating pages to concatenate them all in a single string
-    // to compare previous page to current and
-    // if the difference between prev page and current is greater than 1
-    // means it's a sequence breaking - add the three dots
-    const prevPage = leftSideNoDuplicates[i - 1];
-    let joinToken = ' ';
-    if (prevPage && page - prevPage > 1) {
-      joinToken = ' ... ';
-    }
-    leftSideString += `${joinToken}${page}`;
-  });
-  // add '...' when around are hidden
-  if (!aroundLeftSide.length) leftSideString += '...';
-
+  let leftSideString = '';
+  if (leftSideNoDuplicates.length > 0) {
+    leftSideString += boundariesLeftSide.length ? '' : '...';
+    // build the string that precedes the [currentPage]
+    leftSideNoDuplicates.map((page, i) => {
+      // the logic is
+      // while iterating pages to concatenate them all in a single string
+      // to compare previous page to current and
+      // if the difference between prev page and current is greater than 1
+      // means it's a sequence breaking - add the three dots
+      const prevPage = leftSideNoDuplicates[i - 1];
+      let joinToken = ' ';
+      if (prevPage && page - prevPage > 1) {
+        joinToken = ' ... ';
+      }
+      leftSideString += `${joinToken}${page}`;
+    });
+    // add '...' when around are hidden
+    if (!aroundLeftSide.length) leftSideString += ' ...';
+  }
 
   let rightSideString = '';
-  // build the string that follows [currentPage]
-  rightSideNoDuplicates.map((page, i) => {
-    const prevPage = rightSideNoDuplicates[i - 1];
-    let joinToken = ' ';
-    if (prevPage && page - prevPage !== 1) {
-      joinToken = ' ... ';
-    }
-    rightSideString += `${joinToken}${page}`;
-  });
-  if (!boundariesRightSide.length) rightSideString += ' ...';
+  if (rightSideNoDuplicates.length > 0) {
+    // rightSideString += around ? '' : '...';
+    // build the string that follows [currentPage]
+    rightSideNoDuplicates.map((page, i) => {
+      const prevPage = rightSideNoDuplicates[i - 1];
+      let joinToken = ' ';
+      if (prevPage && page - prevPage !== 1) {
+        joinToken = ' ... ';
+      }
+      rightSideString += `${joinToken}${page}`;
+    });
+    if (!boundariesRightSide.length) rightSideString += ' ...';
+  }
 
   // concat the selected page
   const finalResult = `${leftSideString} [${currentPage}]${rightSideString}`;
@@ -140,10 +148,14 @@ export const pagination = (
 // 2) - copy-paste the import statement below and hit enter
 // import { pagination } from './index'
 // 3) - you can now run the pagination() function
-console.log('final result: ', pagination(500, 1000, 5, 5));
-console.log('final result: ', pagination(13, 20, 30, 30));
-console.log('final result: ', pagination(10, 20, 0, 2));
+// console.log('final result: ', pagination(500, 1000, 5, 5));
+// console.log('final result: ', pagination(13, 20, 30, 30));
+// console.log('final result: ', pagination(10, 20, 0, 2));
+
 // console.log('final result: ', pagination(21, 20, 2, 3));
+
+console.log('final result: ', pagination(4, 5, 1, 0));
+
 // console.log('final result: ', pagination(10, 20, 30, 3));
 // console.log('final result: ', pagination(10, 20, 3, 30));
 // console.log('final result: ', pagination(10, 20, 30, 30));
