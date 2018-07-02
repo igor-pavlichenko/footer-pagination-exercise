@@ -95,12 +95,6 @@ export const pagination = (
     }
   }
 
-
-  console.log(`leftSideBoundary: ${leftSideBoundary.start} - ${leftSideBoundary.end}`);
-  console.log(`leftSideAround: ${leftSideAround.start} - ${leftSideAround.end}`);
-  console.log(`rightSideAround: ${rightSideAround.start} - ${rightSideAround.end}`);
-  console.log(`rightSideBoundary: ${rightSideBoundary.start} - ${rightSideBoundary.end}`);
-
   // get boundary pages for both sides
   // boundaries are sliced from external limits (far from current page)
   const boundariesLeftSide = [];
@@ -133,12 +127,6 @@ export const pagination = (
     }
   }
 
-  console.log('boundariesLeftSide: ', boundariesLeftSide);
-  console.log('boundariesRightSide: ', boundariesRightSide);
-  console.log('aroundLeftSide: ', aroundLeftSide);
-  console.log('aroundRightSide: ', aroundRightSide);
-
-
   // filter duplicates and sort them
   const leftSideNoDuplicates = [...new Set<number>(
     [...boundariesLeftSide, ...aroundLeftSide].sort((a, b) => a - b),
@@ -146,10 +134,6 @@ export const pagination = (
   const rightSideNoDuplicates = [...new Set<number>(
     [...boundariesRightSide, ...aroundRightSide].sort((a, b) => a - b),
   )];
-  console.log('\n');
-  console.log('leftSideNoDuplicates: ', leftSideNoDuplicates);
-  console.log('rightSideNoDuplicates: ', rightSideNoDuplicates);
-
 
   // add '...' when boundaries are hidden
   let leftSideString = '';
@@ -227,36 +211,3 @@ export const pagination = (
 
   return finalResult.trim();
 };
-
-// 1) - run ts-node
-// 2) - copy-paste the import statement below and hit enter
-// import { pagination } from './index'
-// 3) - you can now run the pagination() function
-// console.log('final result: ', pagination(500, 1000, 5, 5));
-// console.log('final result: ', pagination(13, 20, 30, 30));
-// console.log('final result: ', pagination(10, 20, 0, 2)); // 0 boundaries
-// console.log('final result: ', pagination(10, 20, 2, 0)); // 0 around
-// console.log('final result: ', pagination(20, 20, 0, 3));
-// console.log('final result: ', pagination(1, 20, 0, 3));
-
-// console.log('final result: ', pagination(4, Number.MAX_SAFE_INTEGER, 2, 2));
-// console.log('final result: ', pagination(1, Number.MAX_SAFE_INTEGER, 2, 2));
-// console.log('final result: ', pagination(4, 10, 99, 2));
-// console.log('final result: ', pagination(2, 5, 1, 0));
-// console.log('final result: ', pagination(4, 5, 0, 1));
-console.log('final result: ', pagination(2, 5, 0, 1));
-
-// console.log('final result: ', pagination(4, 10, 2, 0));
-
-// console.log('final result: ', pagination(4, 5, 1, 0));
-
-// console.log('final result: ', pagination(10, 20, 30, 3));
-// console.log('final result: ', pagination(10, 20, 3, 30));
-// console.log('final result: ', pagination(10, 20, 30, 30));
-// console.log('final result 1: ', pagination(10, 99999, 3, 3));
-// console.log('final result 2: ', pagination(10, 999999, 3, 3));
-// console.log('final result 3: ', pagination(10, 9999999, 3, 3));
-// console.log('final result 4: ', pagination(10, 99999999, 3, 3)); // slows down here
-// console.log('final result 5: ', pagination(10, 999999999, 3, 3)); // crashes here
-// console.log('final result 6: ', pagination(10, Number.MAX_SAFE_INTEGER, 3, 3));
-

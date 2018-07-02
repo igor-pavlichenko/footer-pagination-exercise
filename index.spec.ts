@@ -79,6 +79,10 @@ describe('footer pagination', () => {
     const result = pagination(1, 10, 2, 2);
     expect(result).to.equal('[1] 2 3 ... 9 10');
   });
+  it('current page at the edge (END), pages in the middle hidden', () => {
+    const result = pagination(10, 10, 2, 2);
+    expect(result).to.equal('1 2 ... 8 9 [10]');
+  });
 
   it('currentPage out of bounds (greater)', () => {
     const result = pagination(11, 10, 2, 2);
@@ -89,14 +93,24 @@ describe('footer pagination', () => {
     expect(result).to.equal('currentPage out of bounds');
   });
 
-  it('"boundaries" = 0', () => {
+  it('"boundaries" = 0, starting and ending pages hidden', () => {
     const result = pagination(4, 10, 0, 2);
     expect(result).to.equal('... 2 3 [4] 5 6 ...');
   });
 
-  it('"around" = 0', () => {
+  it('"boundaries" = 0, but all pages are revealed by BIG around', () => {
+    const result = pagination(4, 10, 0, 99);
+    expect(result).to.equal('1 2 3 [4] 5 6 7 8 9 10');
+  });
+
+
+  it('"around" = 0 meaning pages immediately before and after current are hidden', () => {
     const result = pagination(4, 10, 2, 0);
     expect(result).to.equal('1 2 ... [4] ... 9 10');
+  });
+  it('"around" = 0 but all pages are revealed by BIG boundaries', () => {
+    const result = pagination(4, 10, 99, 0);
+    expect(result).to.equal('1 2 3 [4] 5 6 7 8 9 10');
   });
 
   it('"boundaries" = 0 and currentPage at the edge (START)', () => {
@@ -113,11 +127,11 @@ describe('footer pagination', () => {
     const result = pagination(1, 10, 2, 0);
     expect(result).to.equal('[1] ... 9 10');
   });
-
   it('"around" = 0 and currentPage at the edge (END)', () => {
     const result = pagination(10, 10, 2, 0);
     expect(result).to.equal('1 2 ... [10]');
   });
+  // OOPS, i guess i just assumed that around=0 has more priority
 
   it('big number of "totalPages"', () => {
     const result = pagination(4, Number.MAX_SAFE_INTEGER, 2, 2);
@@ -166,7 +180,4 @@ describe('footer pagination', () => {
        */
     );
   });
-  // node behaves unexpectedly
-  // 10,220,000,000
-  // 9,007,199,254,740,991
 });
