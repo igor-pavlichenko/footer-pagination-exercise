@@ -96,10 +96,10 @@ export const pagination = (
   }
 
 
-  console.log(`leftSideBoundary: ${leftSideBoundary.start} - ${leftSideBoundary.end}`);
-  console.log(`leftSideAround: ${leftSideAround.start} - ${leftSideAround.end}`);
-  console.log(`rightSideAround: ${rightSideAround.start} - ${rightSideAround.end}`);
-  console.log(`rightSideBoundary: ${rightSideBoundary.start} - ${rightSideBoundary.end}`);
+  // console.log(`leftSideBoundary: ${leftSideBoundary.start} - ${leftSideBoundary.end}`);
+  // console.log(`leftSideAround: ${leftSideAround.start} - ${leftSideAround.end}`);
+  // console.log(`rightSideAround: ${rightSideAround.start} - ${rightSideAround.end}`);
+  // console.log(`rightSideBoundary: ${rightSideBoundary.start} - ${rightSideBoundary.end}`);
 
   // get boundary pages for both sides
   // boundaries are sliced from external limits (far from current page)
@@ -170,7 +170,15 @@ export const pagination = (
       leftSideString += `${joinToken}${page}`;
     });
     // add '...' when around are hidden
-    if (!aroundLeftSide.length) leftSideString += ' ...';
+    // if there are no pages AROUND to left side
+    if (!aroundLeftSide.length) {
+      // check for boundaries
+      // if closest page from boundaries is not current page
+      if (((boundariesLeftSide.slice(-1)[0] + 1) !== currentPage)) {
+        leftSideString += ' ...';
+      }
+
+    }
   }
 
   let rightSideString = '';
@@ -217,7 +225,8 @@ export const pagination = (
 
 // console.log('final result: ', pagination(4, Number.MAX_SAFE_INTEGER, 2, 2));
 // console.log('final result: ', pagination(1, Number.MAX_SAFE_INTEGER, 2, 2));
-console.log('final result: ', pagination(4, 10, 99, 2));
+// console.log('final result: ', pagination(4, 10, 99, 2));
+console.log('final result: ', pagination(2, 5, 1, 0));
 
 // console.log('final result: ', pagination(4, 10, 2, 0));
 

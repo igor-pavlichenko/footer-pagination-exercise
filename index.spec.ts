@@ -13,10 +13,18 @@ describe('footer pagination', () => {
     const result = pagination(4, 5, 1, 0);
     expect(result).to.equal('1 ... [4] 5');
   });
+  it('example #1 from pdf mirrored', () => {
+    const result = pagination(2, 5, 1, 0);
+    expect(result).to.equal('1 [2] ... 5');
+  });
 
   it('example #2 from pdf', () => {
     const result = pagination(4, 10, 2, 2);
     expect(result).to.equal('1 2 3 [4] 5 6 ... 9 10');
+  });
+  it('example #2 from pdf mirrored', () => {
+    const result = pagination(7, 10, 2, 2);
+    expect(result).to.equal('1 2 ... 5 6 [7] 8 9 10');
   });
 
   it('"currentPage" in the middle, large amount of pages, small "around" and "boundaries"', () => {
