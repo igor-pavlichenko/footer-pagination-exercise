@@ -154,7 +154,15 @@ export const pagination = (
   // add '...' when boundaries are hidden
   let leftSideString = '';
   if (leftSideNoDuplicates.length > 0) {
-    leftSideString += boundariesLeftSide.length ? '' : '...';
+    // if there are no boundaries pages to left of current page
+    if (!boundariesLeftSide.length) {
+      // then if by going back 'around' pages from currentPage we
+      // don't break the inferior limit
+      if (currentPage - aroundApplied > 1) {
+        // means there are pages to omit
+        leftSideString += '...';
+      }
+    }
     // build the string that precedes the [currentPage]
     leftSideNoDuplicates.map((page, i) => {
       // the logic is
@@ -235,7 +243,8 @@ export const pagination = (
 // console.log('final result: ', pagination(1, Number.MAX_SAFE_INTEGER, 2, 2));
 // console.log('final result: ', pagination(4, 10, 99, 2));
 // console.log('final result: ', pagination(2, 5, 1, 0));
-console.log('final result: ', pagination(4, 5, 0, 1));
+// console.log('final result: ', pagination(4, 5, 0, 1));
+console.log('final result: ', pagination(2, 5, 0, 1));
 
 // console.log('final result: ', pagination(4, 10, 2, 0));
 
