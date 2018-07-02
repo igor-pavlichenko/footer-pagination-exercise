@@ -26,6 +26,10 @@ export const pagination = (
     || !Number.isSafeInteger(around)) {
     return 'v8 limitation with Number.MAX_SAFE_INTEGER';
   }
+  if (totalPages < 1 || boundaries < 0 || around < 0) {
+    return '"boundaries" & "around" should not be negative'
+      + 'AND "totalPages" should be greater than 0';
+  }
   if (currentPage < 1 || currentPage > totalPages) {
     return 'currentPage out of bounds';
   }
@@ -211,3 +215,6 @@ export const pagination = (
 
   return finalResult.trim();
 };
+
+
+console.log(pagination(1, -5, -5, -5));
