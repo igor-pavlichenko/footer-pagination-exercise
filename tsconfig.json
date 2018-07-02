@@ -1,6 +1,7 @@
 {
     "compilerOptions": {
         "target": "esnext",
-        "sourceMap": true
+		"sourceMap": true,
+		"moduleResolution": "node"
     }
 }

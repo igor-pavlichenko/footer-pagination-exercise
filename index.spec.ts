@@ -8,14 +8,30 @@ describe('footer pagination', () => {
     const result = pagination(1, 1, 1, 1);
     expect(result).to.equal('[1]');
   });
+  it('should return string with 1 page only (no boundaries nor around)', () => {
+    const result = pagination(1, 1, 0, 0);
+    expect(result).to.equal('[1]');
+  });
+  it('should return string with 1 page only (boundaries & around greater than totalPages)', () => {
+    const result = pagination(1, 1, 9, 9);
+    expect(result).to.equal('[1]');
+  });
 
   it('example #1 from pdf', () => {
     const result = pagination(4, 5, 1, 0);
     expect(result).to.equal('1 ... [4] 5');
   });
+  it('example #1 from pdf (inverted boundaries & around)', () => {
+    const result = pagination(4, 5, 0, 1);
+    expect(result).to.equal('... 3 [4] 5');
+  });
   it('example #1 from pdf mirrored', () => {
     const result = pagination(2, 5, 1, 0);
     expect(result).to.equal('1 [2] ... 5');
+  });
+  it('example #1 from pdf mirrored (inverted boundaries & around)', () => {
+    const result = pagination(2, 5, 0, 1);
+    expect(result).to.equal('1 [2] 3 ...');
   });
 
   it('example #2 from pdf', () => {

@@ -96,10 +96,10 @@ export const pagination = (
   }
 
 
-  // console.log(`leftSideBoundary: ${leftSideBoundary.start} - ${leftSideBoundary.end}`);
-  // console.log(`leftSideAround: ${leftSideAround.start} - ${leftSideAround.end}`);
-  // console.log(`rightSideAround: ${rightSideAround.start} - ${rightSideAround.end}`);
-  // console.log(`rightSideBoundary: ${rightSideBoundary.start} - ${rightSideBoundary.end}`);
+  console.log(`leftSideBoundary: ${leftSideBoundary.start} - ${leftSideBoundary.end}`);
+  console.log(`leftSideAround: ${leftSideAround.start} - ${leftSideAround.end}`);
+  console.log(`rightSideAround: ${rightSideAround.start} - ${rightSideAround.end}`);
+  console.log(`rightSideBoundary: ${rightSideBoundary.start} - ${rightSideBoundary.end}`);
 
   // get boundary pages for both sides
   // boundaries are sliced from external limits (far from current page)
@@ -133,10 +133,10 @@ export const pagination = (
     }
   }
 
-  // console.log('boundariesLeftSide: ', boundariesLeftSide);
-  // console.log('boundariesRightSide: ', boundariesRightSide);
-  // console.log('aroundLeftSide: ', aroundLeftSide);
-  // console.log('aroundRightSide: ', aroundRightSide);
+  console.log('boundariesLeftSide: ', boundariesLeftSide);
+  console.log('boundariesRightSide: ', boundariesRightSide);
+  console.log('aroundLeftSide: ', aroundLeftSide);
+  console.log('aroundRightSide: ', aroundRightSide);
 
 
   // filter duplicates and sort them
@@ -146,9 +146,9 @@ export const pagination = (
   const rightSideNoDuplicates = [...new Set<number>(
     [...boundariesRightSide, ...aroundRightSide].sort((a, b) => a - b),
   )];
-  // console.log('\n');
-  // console.log('leftSideNoDuplicates: ', leftSideNoDuplicates);
-  // console.log('rightSideNoDuplicates: ', rightSideNoDuplicates);
+  console.log('\n');
+  console.log('leftSideNoDuplicates: ', leftSideNoDuplicates);
+  console.log('rightSideNoDuplicates: ', rightSideNoDuplicates);
 
 
   // add '...' when boundaries are hidden
@@ -202,7 +202,15 @@ export const pagination = (
       }
       rightSideString += `${joinToken}${page}`;
     });
-    if (!boundariesRightSide.length) rightSideString += ' ...';
+    // if there are no boundaries
+    if (!boundariesRightSide.length) {
+      // then there are around
+      // only omit pages if after adding 'around' to current page number
+      // it doesn't exceeds totalPages limit
+      if (currentPage + aroundApplied < totalPages) {
+        rightSideString += ' ...';
+      }
+    }
   }
 
 
@@ -226,7 +234,8 @@ export const pagination = (
 // console.log('final result: ', pagination(4, Number.MAX_SAFE_INTEGER, 2, 2));
 // console.log('final result: ', pagination(1, Number.MAX_SAFE_INTEGER, 2, 2));
 // console.log('final result: ', pagination(4, 10, 99, 2));
-console.log('final result: ', pagination(2, 5, 1, 0));
+// console.log('final result: ', pagination(2, 5, 1, 0));
+console.log('final result: ', pagination(4, 5, 0, 1));
 
 // console.log('final result: ', pagination(4, 10, 2, 0));
 
