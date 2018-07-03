@@ -125,13 +125,12 @@ describe('footer pagination', () => {
 
   it('"around" = 0 and currentPage at the edge (START)', () => {
     const result = pagination(1, 10, 2, 0);
-    expect(result).to.equal('[1] ... 9 10');
+    expect(result).to.equal('[1] 2 ... 9 10');
   });
   it('"around" = 0 and currentPage at the edge (END)', () => {
     const result = pagination(10, 10, 2, 0);
-    expect(result).to.equal('1 2 ... [10]');
+    expect(result).to.equal('1 2 ... 9 [10]');
   });
-  // OOPS, i guess i just assumed that around=0 has more priority
 
   it('big number of "totalPages"', () => {
     const result = pagination(4, Number.MAX_SAFE_INTEGER, 2, 2);
