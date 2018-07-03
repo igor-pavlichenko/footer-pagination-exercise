@@ -19,5 +19,8 @@
 		"tslint": "^5.10.0",
 		"tslint-config-airbnb": "^5.9.2",
 		"typescript": "^2.9.2"
+	},
+	"dependencies": {
+		"rxjs": "^6.2.1"
 	}
 }
