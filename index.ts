@@ -24,7 +24,7 @@ export const pagination = (
 ) => {
   if (!Number.isSafeInteger(currentPage)
     || !Number.isSafeInteger(totalPages)
-    || !Number.isSafeInteger(totalPages)
+    || !Number.isSafeInteger(inputBoundaries)
     || !Number.isSafeInteger(inputAround)) {
     return 'v8 limitation with Number.MAX_SAFE_INTEGER';
   }
@@ -105,7 +105,7 @@ export const pagination = (
           filter(x => x >= 1 && x <= totalPages),
           // and those that are [for some reason, looking at you -> rxjs]
           // out of their own intervals
-          filter(x => interval.start && x <= interval.end),
+          filter(x => x >= interval.start && x <= interval.end),
       )
         // add them to array after filters
         .subscribe(x => pagesSet.add(x));
